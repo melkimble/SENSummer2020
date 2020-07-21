@@ -1,3 +1,12 @@
+[CONTRIBUTING.md]: CONTRIBUTING.md
+# SENSummer2020
+
+# Collaborators
+- Melissa Kimble (University of Maine)
+- Kacey Stewart (University of Delaware)
+- Andrew Sellers (McGill University)
+
+
 # README.md
 
 A `README.md` file is a very useful component of any project
@@ -18,7 +27,7 @@ To access the data from a SESYNC hosted environment, open RStudio and
 enter the following command at the `>` prompt.
 
 ```
-file.symlink('/nfs/public-data/training', 'data')
+file.symlink('https://drive.google.com/drive/folders/104mPe_Bai3wa9ZUN6dEHipeFwov92472?usp=sharing', 'data')
 ```
 
 Otherwise, download the "data.zip" folder from the course syllabus (if
@@ -26,10 +35,3 @@ not currently there, it will be posted after the course), and unzip it
 to this "handouts" folder. The result should be a subdirectory called
 "data" within this project.
 
-[CONTRIBUTING.md]: CONTRIBUTING.md
-# SENSummer2020
-
-# Collaborators
-- Melissa Kimble (University of Maine)
-- Kacey Stewart (University of Delaware)
-- Andrew Sellers (McGill University)
