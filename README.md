@@ -12,13 +12,3 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 ## Others not with us this week
 - Holly Cronin (McGill University)
 - Janardan Mainali (Portland State University)
-
-
-
-## Data setup (RStudio)
-Download https://drive.google.com/file/d/11hP2ZEayYl9Ci3RoVpwvlOkdE3604OV-/view?usp=sharing
-Upload to ~
-
-## Commands (Terminal)
-cd ~/SENData_subtest
-ln -s "$(pwd)" ~/SENSummer2020/Data/01_Original

@@ -22,3 +22,11 @@ git diff-tree -p pg_parser_branch
 git diff-tree -p pg_parser/master
 
 ## git reset --soft HEAD~1 # undo last commit; pre-push
+
+## Data setup (RStudio)
+#Download https://drive.google.com/file/d/11hP2ZEayYl9Ci3RoVpwvlOkdE3604OV-/view?usp=sharing
+#Upload to ~
+
+## Commands (Terminal)
+cd ~/SENData_subtest
+ln -s "$(pwd)" ~/SENSummer2020/Data/01_Original
