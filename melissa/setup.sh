@@ -20,3 +20,5 @@ git merge --squash -s recursive -Xsubtree=pg_parser pg_parser_branch
 git diff-tree -p pg_parser_branch
 # compare pg_parser subdirectory with pg_parser origin/master repo
 git diff-tree -p pg_parser/master
+
+## git reset --soft HEAD~1 # undo last commit; pre-push
