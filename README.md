@@ -28,3 +28,8 @@ to this "handouts" folder. The result should be a subdirectory called
 
 [CONTRIBUTING.md]: CONTRIBUTING.md
 # SENSummer2020
+
+# Collaborators
+- Melissa Kimble (University of Maine)
+- Kacey Stewart (University of Delaware)
+- Andrew Sellers (McGill University)
