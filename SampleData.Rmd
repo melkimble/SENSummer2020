@@ -1,0 +1,228 @@
+---
+title: "SampleData"
+output: html_notebook
+---
+
+
+```{r}
+
+library(data.table)
+library(dplyr)
+
+pq_metadata <- fread('Data/02_Working/pq_metadata.csv')
+
+# displays column names
+names(pq_metadata)
+
+```
+
+```{r}
+# Head displays the first 6 rows of the data.table
+head(pq_metadata)
+
+```
+```{r}
+# what are the unique publication titles 
+unique(pq_metadata$`Publication title`)
+
+```
+```{r}
+# Substitute 
+# "Bangor Daily News; Bang or, Me."  
+# "Bangor Daily News; Ba ngor, Me." 
+# "Bangor Dail y News; Bangor, Me."  
+# with "Bangor Daily News; Bangor, Me."  
+
+# "Morning Sentinel; Wate rville, Me." 
+# "Central Maine Morning Sentinel; Waterville, Me."
+#  with "Morning Sentinel; Waterville, Me."       
+
+# "Kennebec Journal; Augusta, Me." 
+# "Kennebec Journal; Augusta, Me ."
+
+```
+
+
+```{r}
+
+# How do you want to treat NA?
+# subset the data by the NAs, explore them & their origin
+# can we programmatically fix it, or do we have to do it manually?
+
+```
+
+```{r}
+
+fulltext_df<-pq_metadata %>%
+  group_by(`Publication title`) %>%
+  summarise(agg_full_text = toString(`Full text`), .groups = 'keep')
+
+```
+
+```{r}
+
+fulltext_df
+
+```
+
+# Predefined Cleaning Functions
+# https://cyberhelp.sesync.org/text-mining-lesson/course/
+
+```{r}
+
+library(magrittr)
+library(tm)
+library(stringr)
+
+
+BDN<-fulltext_df$agg_full_text[1]
+
+
+# now have to make BDN compatible with a VCorpus object
+BDN_vcorpus <- Corpus(VectorSource(BDN)) 
+
+# default cleaning stuff (function names self explanatory)
+BDN_words <- BDN_vcorpus %>%
+  tm_map(removePunctuation) %>%
+  #tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
+
+
+```
+
+
+```{r}
+
+# stop words!
+BDN_words <- BDN_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
+
+```
+
+
+# Document-Term Matrix
+
+```{r}
+
+BDN_DocTermMatrix <- DocumentTermMatrix(BDN_words)
+
+
+```
+
+
+## From here downward the code needs to be changed from the examples to use our own corpus
+
+```{r}
+
+library(tidytext)
+library(dplyr)
+
+dtt <- tidy(dtm)
+words <- dtt %>%
+  group_by(term) %>%
+  summarise(
+    n = n(),
+    total = sum(count)) %>%
+  mutate(nchar = nchar(term))
+
+
+```
+
+```{r}
+
+library(ggplot2)
+
+ggplot(words, aes(x = nchar)) +
+  geom_histogram(binwidth = 1)
+
+```
+
+```{r}
+dtt_trimmed <- words %>%
+  filter(
+    nchar < 16,
+    n > 1,
+    total > 3) %>%
+  select(term) %>%
+  inner_join(dtt)
+
+```
+
+```{r}
+dtm_trimmed <- dtt_trimmed %>%
+  cast_dtm(document, term, count)
+
+```
+
+```{r}
+# console
+dtm_trimmed
+
+```
+
+## Term Correlations
+
+
+```{r}
+word_assoc <- findAssocs(dtm_trimmed, 'ken', 0.6)
+word_assoc <- data.frame(
+  word = names(word_assoc[[1]]),
+  assoc = word_assoc,
+  row.names = NULL)
+
+```
+
+### word cloud
+
+```{r}
+library(ggwordcloud)
+
+ggplot(word_assoc,
+  aes(label = word, size = ken)) +
+  geom_text_wordcloud_area()
+
+```
+
+
+# Topic Modelling
+
+## LDA
+```{r}
+library(topicmodels)
+
+seed = 12345
+fit = LDA(dtm_trimmed, k = 5, control = list(seed=seed))
+```
+
+
+```{r}
+terms(fit, 20)
+
+```
+
+
+```{r}
+email_topics <- as.data.frame(
+  posterior(fit, dtm_trimmed)$topics)
+
+```
+
+```{r}
+# console
+head(email_topics)
+
+```
+
+
+```{r}
+library(ggwordcloud)
+
+topics <- tidy(fit) %>%
+  filter(beta > 0.004)
+
+ggplot(topics,
+  aes(size = beta, label = term)) +
+  geom_text_wordcloud_area(rm_outside = TRUE) +
+  facet_wrap(vars(topic))
+```
