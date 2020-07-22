@@ -30,3 +30,7 @@ git diff-tree -p pg_parser/master
 ## Commands (Terminal)
 cd ~/SENData_subtest
 ln -s "$(pwd)" ~/SENSummer2020/Data/01_Original
+
+
+
+## fix subproject
