@@ -12,3 +12,24 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 ## Others not with us this week
 - Holly Cronin (McGill University)
 - Janardan Mainali (Portland State University)
+
+
+#  Broad Project Goals
+(Cyber Goals) - How did they connect?
+
+Insert Flow Chart Here?
+
+Characterize SEN ->
+Specify project boundaries (temporal, regional scope, download source) -> 
+Download Data (ProQuest) -> 
+Topic Modelling (R, Python - Summer Institute)->
+ * Compare Publication categories
+Classify Articles (based on Topic Modelling) ->
+Sample Classified Articles ->
+close reading/Thematic Coding (Nvivo) ->
+Insights ->
+Supervised Classification (will it work?!???!?!? - SpaCy) -?
+ * use coded text as labels for classification
+Timeline of SEN occurrences & oyster events
+
+
