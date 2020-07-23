@@ -14,6 +14,7 @@ library(NLP)
 library(tidytext)
 library(tidytext)
 library(tm)
+library(topicmodels)
 
 #load data
 pq_metadata <- fread('Data/02_Working/pq_metadata.csv')
@@ -176,6 +177,27 @@ BDN_words <- BDN_words %>%
   tm_map(stemDocument) %>%
   tm_map(removeWords, stopwords("english"))
 
+KJ_words <- KJ_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
+MT_words <- MT_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
+
+MS_words <- MS_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
+
+
+PPH_words <- PPH_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
+
+SJ_words <- SJ_words %>%
+  tm_map(stemDocument) %>%
+  tm_map(removeWords, stopwords("english"))
+
+
 ```
 
 
@@ -184,6 +206,17 @@ BDN_words <- BDN_words %>%
 ```{r}
 
 BDN_DocTermMatrix <- DocumentTermMatrix(BDN_words)
+
+KJ_DocTermMatrix <- DocumentTermMatrix(KJ_words)
+
+MT_DocTermMatrix <- DocumentTermMatrix(MT_words)
+
+MS_DocTermMatrix <- DocumentTermMatrix(MS_words)
+
+PPH_DocTermMatrix <- DocumentTermMatrix(PPH_words)
+
+SJ_DocTermMatrix <- DocumentTermMatrix(SJ_words)
+
 
 
 ```
