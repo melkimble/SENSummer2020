@@ -40,6 +40,24 @@ unique(pq_metadata$`Publication title`)
 # "Kennebec Journal; Augusta, Me." 
 # "Kennebec Journal; Augusta, Me ."
 
+pq_metaSub<-pq_metadata #create new data frame to avoid saving over
+
+pq_metaSub[pq_metaSub$`Publication title` == 
+              "Bangor Daily News; Bang or, Me."] <- "Bangor Daily News; Bangor, Me."
+pq_metaSub[pq_metaSub$`Publication title` == 
+              "Bangor Daily News; Ba ngor, Me."] <- "Bangor Daily News; Bangor, Me."
+pq_metaSub[pq_metaSub$`Publication title` == 
+              "Bangor Dail y News; Bangor, Me." ] <- "Bangor Daily News; Bangor, Me."
+pq_metaSub[pq_metaSub$`Publication title` == 
+              "Morning Sentinel; Wate rville, Me." ] <- "Morning Sentinel; Waterville, Me."
+pq_metaSub[pq_metaSub$`Publication title` == 
+              "Central Maine Morning Sentinel; Waterville, Me." ] <- "Morning Sentinel; Waterville, Me."
+pq_metaSub[pq_metaSub$`Publication title` == 
+              "Kennebec Journal; Augusta, Me ." ] <- "Kennebec Journal; Augusta, Me."
+
+
+#check to see if pub title substitution worked --- yes, no weird repeats
+unique(pq_metaSub$`Publication title`)
 ```
 
 
@@ -48,6 +66,14 @@ unique(pq_metadata$`Publication title`)
 # How do you want to treat NA?
 # subset the data by the NAs, explore them & their origin
 # can we programmatically fix it, or do we have to do it manually?
+
+sum(is.na(pq_metaSub$`Publication title`)) ### there are 45 rows that have NAs
+
+pqNA<-pq_metaSub[is.na(pq_metaSub$`Publication title`),]
+##lots of info missing from other fields in this group... remove? 
+
+sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those without titles
+
 
 ```
 

@@ -2,10 +2,8 @@
 
 library(stringr)
 
-str_extract_all(
-  'Email info@sesync.org or tweet @SESYNC for details!',
-  '\\b\\S+@\\S+\\b')
-
+str_extract_all('Email info@sesync.org or tweet @SESYNC for details!',
+                '\\b\\S+@\\S+\\b') 
 library(tm)
 
 enron <- VCorpus(DirSource("~/data/enron")) ##added ~ to make it work

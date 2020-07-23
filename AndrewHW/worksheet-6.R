@@ -125,7 +125,7 @@ nutrients <- map_dfr(fruit$foodNutrients,
 library(DBI) 
 library(RSQLite)
 
-fruit_db <- dbConnect(SQLite(), 'fruits.sqlite') 
+fruit_db <- dbConnect(SQLite(), '~/SENSummer2020/AndrewHW/fruits.sqlite') 
 
 query_params$pageSize <- 100
 
