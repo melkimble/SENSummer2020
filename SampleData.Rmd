@@ -59,8 +59,7 @@ pq_metaSub[pq_metaSub$`Publication title` ==
 pq_metaSub[pq_metaSub$`Publication title` == 
               "Kennebec Journal; Augusta, Me ." ] <- "Kennebec Journal; Augusta, Me."
 pq_metaSub[pq_metaSub$`Publication title` == 
-              "Portland Press Herald; Port land, Me."] <- "Portland Press Herald; Portland, Me."
-
+             "Portland Press Herald; Port land, Me."] <- "Portland Press Herald; Portland, Me."
 
 #check to see if pub title substitution worked --- yes, no weird repeats
 unique(pq_metaSub$`Publication title`)
@@ -85,7 +84,7 @@ sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those witho
 
 ```{r}
 
-fulltext_df<-pq_metadata %>%
+fulltext_df<-pq_metaSub %>%
   group_by(`Publication title`) %>%
   summarise(agg_full_text = toString(`Full text`), .groups = 'keep')
 
