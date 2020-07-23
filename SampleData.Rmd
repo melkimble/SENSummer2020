@@ -5,10 +5,17 @@ output: html_notebook
 
 
 ```{r}
-
+#load libraries
+library(stringr)
 library(data.table)
 library(dplyr)
+library(magrittr)
+library(NLP)
+library(tidytext)
+library(tidytext)
+library(tm)
 
+#load data
 pq_metadata <- fread('Data/02_Working/pq_metadata.csv')
 
 # displays column names
@@ -101,10 +108,7 @@ fulltext_df
 
 ```{r}
 
-library(magrittr)
-library(tm)
-library(stringr)
-
+#create full text object for each publication
 
 BDN<-fulltext_df$agg_full_text[1]
 
@@ -118,8 +122,17 @@ PPH<-fulltext_df$agg_full_text[5]
 
 SJ<-fulltext_df$agg_full_text[6]
 
-# now have to make BDN compatible with a VCorpus object
+# now have to make compatible with a VCorpus object
 BDN_vcorpus <- Corpus(VectorSource(BDN)) 
+KJ_vcorpus<- Corpus(VectorSource(KJ)) 
+MT_vcorpus<- Corpus(VectorSource(MT)) 
+MS_vcorpus<- Corpus(VectorSource(MS)) 
+PPH_vcorpus<- Corpus(VectorSource(PPH)) 
+SJ_vcorpus<- Corpus(VectorSource(SJ)) 
+
+```
+
+```{r}
 
 # default cleaning stuff (function names self explanatory)
 BDN_words <- BDN_vcorpus %>%
@@ -127,6 +140,31 @@ BDN_words <- BDN_vcorpus %>%
   #tm_map(removeNumbers) %>%
   tm_map(stripWhitespace)
 
+KJ_words <- KJ_vcorpus %>%
+  tm_map(removePunctuation) %>%
+  #tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
+
+MT_words <- MT_vcorpus %>%
+  tm_map(removePunctuation) %>%
+  #tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
+
+MS_words <- MS_vcorpus %>%
+  tm_map(removePunctuation) %>%
+  #tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
+
+
+PPH_words <- PPH_vcorpus %>%
+  tm_map(removePunctuation) %>%
+  #tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
+
+SJ_words <- SJ_vcorpus %>%
+  tm_map(removePunctuation) %>%
+  #tm_map(removeNumbers) %>%
+  tm_map(stripWhitespace)
 
 ```
 
