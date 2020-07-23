@@ -79,7 +79,7 @@ sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those witho
 
 ```{r}
 
-fulltext_df<-pq_metadata %>%
+fulltext_df<-pq_metaSub %>%
   group_by(`Publication title`) %>%
   summarise(agg_full_text = toString(`Full text`), .groups = 'keep')
 
@@ -103,6 +103,15 @@ library(stringr)
 
 BDN<-fulltext_df$agg_full_text[1]
 
+KJ<-fulltext_df$agg_full_text[2]
+
+MT<-fulltext_df$agg_full_text[3]
+
+MS<-fulltext_df$agg_full_text[4]
+
+PPH<-fulltext_df$agg_full_text[5]
+
+SJ<-fulltext_df$agg_full_text[6]
 
 # now have to make BDN compatible with a VCorpus object
 BDN_vcorpus <- Corpus(VectorSource(BDN)) 
@@ -144,8 +153,8 @@ BDN_DocTermMatrix <- DocumentTermMatrix(BDN_words)
 library(tidytext)
 library(dplyr)
 
-dtt <- tidy(dtm)
-words <- dtt %>%
+BDN_terms<- tidy(BDN_DocTermMatrix)
+BDN_words <- BDN_terms %>%
   group_by(term) %>%
   summarise(
     n = n(),
@@ -218,7 +227,7 @@ ggplot(word_assoc,
 library(topicmodels)
 
 seed = 12345
-fit = LDA(dtm_trimmed, k = 5, control = list(seed=seed))
+fit = LDA(BDN_DocTermMatrix, k = 5, control = list(seed=seed))
 ```
 
 
