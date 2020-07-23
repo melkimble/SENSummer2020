@@ -8,12 +8,14 @@ library(tm)
 
 enron <- VCorpus(DirSource("~/data/enron")) ##added ~ to make it work
 email<-enron[[1]]
+art<-pq_metadata[[1]]
 
 
 match <- str_match(content(email), '^From: (.*)')
 head(match)
 
-
+match <- str_match(content(art), '^From: (.*)')
+head(match)
 
 ## Data Extraction
 
@@ -94,7 +96,7 @@ enron_words <- enron_words %>%
 
 ## Bag-of-Words
 
-dtm <- DocumentTermMatrix(enron_words)
+dtm <- DocumentTermMatrix(pq_metadata$`Full text`)
 
 ## Long Form
 

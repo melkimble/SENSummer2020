@@ -5,18 +5,10 @@ output: html_notebook
 
 
 ```{r}
-#load libraries
-library(stringr)
+
 library(data.table)
 library(dplyr)
-library(magrittr)
-library(NLP)
-library(tidytext)
-library(tidytext)
-library(tm)
-library(topicmodels)
 
-#load data
 pq_metadata <- fread('Data/02_Working/pq_metadata.csv')
 
 # displays column names
@@ -109,31 +101,16 @@ fulltext_df
 
 ```{r}
 
-#create full text object for each publication
+library(magrittr)
+library(tm)
+library(stringr)
+
 
 BDN<-fulltext_df$agg_full_text[1]
 
-KJ<-fulltext_df$agg_full_text[2]
 
-MT<-fulltext_df$agg_full_text[3]
-
-MS<-fulltext_df$agg_full_text[4]
-
-PPH<-fulltext_df$agg_full_text[5]
-
-SJ<-fulltext_df$agg_full_text[6]
-
-# now have to make compatible with a VCorpus object
+# now have to make BDN compatible with a VCorpus object
 BDN_vcorpus <- Corpus(VectorSource(BDN)) 
-KJ_vcorpus<- Corpus(VectorSource(KJ)) 
-MT_vcorpus<- Corpus(VectorSource(MT)) 
-MS_vcorpus<- Corpus(VectorSource(MS)) 
-PPH_vcorpus<- Corpus(VectorSource(PPH)) 
-SJ_vcorpus<- Corpus(VectorSource(SJ)) 
-
-```
-
-```{r}
 
 # default cleaning stuff (function names self explanatory)
 BDN_words <- BDN_vcorpus %>%
@@ -141,31 +118,6 @@ BDN_words <- BDN_vcorpus %>%
   #tm_map(removeNumbers) %>%
   tm_map(stripWhitespace)
 
-KJ_words <- KJ_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-MT_words <- MT_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-MS_words <- MS_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-
-PPH_words <- PPH_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-SJ_words <- SJ_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
 
 ```
 
@@ -177,27 +129,6 @@ BDN_words <- BDN_words %>%
   tm_map(stemDocument) %>%
   tm_map(removeWords, stopwords("english"))
 
-KJ_words <- KJ_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-MT_words <- MT_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-MS_words <- MS_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-
-PPH_words <- PPH_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-SJ_words <- SJ_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-
 ```
 
 
@@ -206,17 +137,6 @@ SJ_words <- SJ_words %>%
 ```{r}
 
 BDN_DocTermMatrix <- DocumentTermMatrix(BDN_words)
-
-KJ_DocTermMatrix <- DocumentTermMatrix(KJ_words)
-
-MT_DocTermMatrix <- DocumentTermMatrix(MT_words)
-
-MS_DocTermMatrix <- DocumentTermMatrix(MS_words)
-
-PPH_DocTermMatrix <- DocumentTermMatrix(PPH_words)
-
-SJ_DocTermMatrix <- DocumentTermMatrix(SJ_words)
-
 
 
 ```
@@ -229,8 +149,8 @@ SJ_DocTermMatrix <- DocumentTermMatrix(SJ_words)
 library(tidytext)
 library(dplyr)
 
-BDN_terms<- tidy(BDN_DocTermMatrix)
-BDN_words <- BDN_terms %>%
+dtt <- tidy(dtm)
+words <- dtt %>%
   group_by(term) %>%
   summarise(
     n = n(),
@@ -303,7 +223,7 @@ ggplot(word_assoc,
 library(topicmodels)
 
 seed = 12345
-fit = LDA(BDN_DocTermMatrix, k = 5, control = list(seed=seed))
+fit = LDA(dtm_trimmed, k = 5, control = list(seed=seed))
 ```
 
 
