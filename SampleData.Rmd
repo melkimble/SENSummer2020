@@ -99,7 +99,7 @@ fulltext_df<-pq_metaSub %>%
 
 ```{r}
 
-fulltext_df
+#fulltext_df
 
 ```
 
@@ -132,78 +132,19 @@ SJ_vcorpus<- Corpus(VectorSource(SJ))
 
 ```
 
+
+
 ```{r}
-
-# default cleaning stuff (function names self explanatory)
-BDN_words <- BDN_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-KJ_words <- KJ_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-MT_words <- MT_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-MS_words <- MS_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-
-PPH_words <- PPH_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
-
-SJ_words <- SJ_vcorpus %>%
-  tm_map(removePunctuation) %>%
-  #tm_map(removeNumbers) %>%
-  tm_map(stripWhitespace)
+# table ngrams for now - processing is really slow
+#NLP_tokenizer <- function(x) {
+#  unlist(lapply(ngrams(words(x), 1:2), paste, collapse = "_"), use.names = FALSE)
+#}
 
 ```
 
-
 ```{r}
 
-# stop words!
-BDN_words <- BDN_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-KJ_words <- KJ_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-MT_words <- MT_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-MS_words <- MS_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-
-PPH_words <- PPH_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-SJ_words <- SJ_words %>%
-  tm_map(stemDocument) %>%
-  tm_map(removeWords, stopwords("english"))
-
-
-```
-```{r}
-
-NLP_tokenizer <- function(x) {
-  unlist(lapply(ngrams(words(x), 1:3), paste, collapse = "_"), use.names = FALSE)
-  }
-#okenize = NLP_tokenizer,
+#tokenize = NLP_tokenizer,
 
 control_list_ngram = list(removePunctuation = FALSE,
                           removeNumbers = FALSE, 
@@ -219,26 +160,17 @@ control_list_ngram = list(removePunctuation = FALSE,
 # Document-Term Matrix
 
 ```{r}
+KJ_DocTermMatrix <- DocumentTermMatrix(KJ_vcorpus, control_list_ngram)
+
+BDN_DocTermMatrix <- DocumentTermMatrix(BDN_vcorpus, control_list_ngram)
+
 MT_DocTermMatrix <- DocumentTermMatrix(MT_vcorpus, control_list_ngram)
-```
 
+MS_DocTermMatrix <- DocumentTermMatrix(MS_vcorpus, control_list_ngram)
 
+PPH_DocTermMatrix <- DocumentTermMatrix(PPH_vcorpus, control_list_ngram)
 
-```{r}
-
-BDN_DocTermMatrix <- DocumentTermMatrix(BDN_words)
-
-KJ_DocTermMatrix <- DocumentTermMatrix(KJ_words)
-
-
-
-MS_DocTermMatrix <- DocumentTermMatrix(MS_words)
-
-PPH_DocTermMatrix <- DocumentTermMatrix(PPH_words)
-
-SJ_DocTermMatrix <- DocumentTermMatrix(SJ_words)
-
-
+SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control_list_ngram)
 
 ```
 
@@ -265,7 +197,7 @@ BDN_words <- BDN_terms %>%
 
 library(ggplot2)
 
-ggplot(words, aes(x = nchar)) +
+ggplot(BDN_words, aes(x = nchar)) +
   geom_histogram(binwidth = 1)
 
 ```
