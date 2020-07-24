@@ -14,6 +14,7 @@ library(NLP)
 library(tidytext)
 library(tm)
 library(topicmodels)
+library(ggplot2)
 
 #load data
 pq_metadata <- fread('Data/02_Working/pq_metadata.csv')
@@ -176,6 +177,18 @@ PPH_DocTermMatrix <- DocumentTermMatrix(PPH_vcorpus, control_list_ngram)
 
 SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control_list_ngram)
 
+
+```
+```{r}
+
+# make a list of the documents to iterate through
+DTM_list<-list(full_DocTermMatrix, KJ_DocTermMatrix, BDN_DocTermMatrix,
+            MT_DocTermMatrix, MS_DocTermMatrix, PPH_DocTermMatrix,
+            SJ_DocTermMatrix)
+
+DTM_names <- c('full_DocTermMatrix', 'KJ_DocTermMatrix', 'BDN_DocTermMatrix',
+            'MT_DocTermMatrix', 'MS_DocTermMatrix', 'PPH_DocTermMatrix',
+            'SJ_DocTermMatrix')
 ```
 
 
@@ -183,16 +196,12 @@ SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control_list_ngram)
 
 ```{r}
 
-library(tidytext)
-library(dplyr)
-library(ggplot2)
-
-hist_words <- function(DTM) {
+hist_words <- function(DTM, plotTitle='') {
   # The tidytext package converts the (wide) Document Term Matrix into a longer form table with a row for every document and term combination.
   DTM_terms<- tidy(DTM)
   
   # The words data frame is more amenable to further inspection and cleaning, such as removing outliers.
-  # frequency of word letter lengths
+  # frequency of word letter lengths -- if there are a lot of long words or short words, probably need to be dropped.
   DTM_words <- DTM_terms %>%
     group_by(term) %>%
     summarise(
@@ -201,13 +210,21 @@ hist_words <- function(DTM) {
     mutate(nchar = nchar(term))
   
   ggplot(DTM_words, aes(x = nchar)) +
+    ggtitle(plotTitle) +
+    theme(plot.title = element_text(hjust = 0.5)) +
     geom_histogram(binwidth = 1)
 }
 
 ```
 
 ```{r}
-hist_words(BDN_DocTermMatrix)
+
+# iterate through hist_words function
+for (i in 1:length(DTM_list)) {
+  
+  print(hist_words(DTM_list[[i]], DTM_names[i]))
+}
+
 
 ```
 
