@@ -124,8 +124,6 @@ fulltext_df<-pq_metaSub %>%
 
 ```{r}
 
-
-
 #fulltext_qcorp <- quanteda::corpus(fulltext_df, text_field = "agg_full_text") # you have to tell it the name of the text field
 #fulltext_dfm <- quanteda::dfm(fulltext_qcorp, verbose = FALSE)
 
@@ -149,15 +147,6 @@ fulltext_df<-pq_metaSub %>%
 
 #prints stopwords for english
 stopwords(kind="SMART")
-```
-
-
-
-
-
-
-```{r}
-
 ```
 
 
@@ -258,15 +247,15 @@ full_DTM<-tidy_words(full_DocTermMatrix, tidyTrim=TRUE)
 
 plotTitle = "Full Corpus"
 
-png_fn = paste0("Images/WordLengthFreq_Hist.png",collapse=NULL)
+#png_fn = paste0("Images/WordLengthFreq_Hist.png",collapse=NULL)
 
 # save the image in png format
-png(png_fn, width=12, height=8, units="in", res=300)
+#png(png_fn, width=12, height=8, units="in", res=300)
 ggplot(full_DTM[['DTM_summarise']], aes(x = nchar)) +
   ggtitle(plotTitle) +
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_histogram(binwidth = 1)
-dev.off()
+#dev.off()
 
 
 ```
@@ -289,12 +278,12 @@ full_dtm_matrix = as.matrix(full_DocTermMatrix)
 pub_list <- c("PPH", "SJ", "KJ", "MS", "MT", "BDN")
 
 for (i in 1:nrow(full_dtm_matrix)) {
-  png_fn = paste0("Images/",i,"_",pub_list[i],"_wc.png",collapse=NULL)
+#  png_fn = paste0("Images/",i,"_",pub_list[i],"_wc.png",collapse=NULL)
 
   # save the image in png format
-  png(png_fn, width=12, height=8, units="in", res=300)
+#  png(png_fn, width=12, height=8, units="in", res=300)
   wordcloud(colnames(full_dtm_matrix), full_dtm_matrix[i, ], max.words = 200, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
-  dev.off()
+#  dev.off()
 
 }
 ```
@@ -319,14 +308,14 @@ Compute distances between the new cluster and each of the old clusters.
 Repeat steps 2 and 3 until you have a single cluster containing all documents.
 
 ```{r}
-png_fn = paste0("Images/dmatrix_clusterDendogram.png",collapse=NULL)
+#png_fn = paste0("Images/dmatrix_clusterDendogram.png",collapse=NULL)
 
 # save the image in png format
-png(png_fn, width=12, height=8, units="in", res=300)
+#png(png_fn, width=12, height=8, units="in", res=300)
 groups <- hclust(distMatrix,method="ward.D")
 plot(groups, cex=0.9, hang=-1, labels=pub_list)
 rect.hclust(groups, k=5)
-dev.off()
+#dev.off()
 
 
 ```
@@ -367,14 +356,14 @@ library(ggwordcloud)
 tidy_topics <- tidy(fit) %>%
   filter(beta > 0.004)
 
-png_fn = paste0("Images/lda_wcs.png",collapse=NULL)
+#png_fn = paste0("Images/lda_wcs.png",collapse=NULL)
 
 # save the image in png format
-png(png_fn, width=12, height=8, units="in", res=300)
+#png(png_fn, width=12, height=8, units="in", res=300)
 gplt<-ggplot(tidy_topics,
   aes(size = beta, label = term)) +
   geom_text_wordcloud_area(rm_outside = TRUE) +
   facet_wrap(vars(topic))
 print(gplt)
-dev.off()
+#dev.off()
 ```
