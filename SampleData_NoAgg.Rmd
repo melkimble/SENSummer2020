@@ -299,28 +299,28 @@ for (i in 1:nrow(full_dtm_matrix)) {
 }
 ```
 
-## Term Correlations
+
+
+### Calculating distance
 
 ```{r}
-word_assoc <- findAssocs(full_DTM[['DTM_terms']], 'ken', 0.6)
-word_assoc <- data.frame(
-  word = names(word_assoc[[1]]),
-  assoc = word_assoc,
-  row.names = NULL)
+distMatrix <- dist(full_dtm_matrix, method="euclidean")
+
 
 ```
 
-### word cloud
-
 ```{r}
-library(ggwordcloud)
+png_fn = paste0("Images/dmatrix_clusterDendogram.png",collapse=NULL)
 
-ggplot(word_assoc,
-  aes(label = word, size = ken)) +
-  geom_text_wordcloud_area()
+# save the image in png format
+png(png_fn, width=12, height=8, units="in", res=300)
+groups <- hclust(distMatrix,method="ward.D")
+plot(groups, cex=0.9, hang=-1, labels=pub_list)
+rect.hclust(groups, k=5)
+dev.off()
+
 
 ```
-
 
 # Topic Modelling
 
