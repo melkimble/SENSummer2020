@@ -43,7 +43,7 @@ Supervised Classification (will it work?!???!?!? - SpaCy) -?
  * use coded text as labels for classification
 Timeline of SEN occurrences & oyster events
 
-![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/1_PPH_wc.png")
+<img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/1_PPH_wc.png">
 ![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/2_SJ_wc.png")
 ![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/3_KJ_wc.png")
 ![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/lda_wcs.png")
