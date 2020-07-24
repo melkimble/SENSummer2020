@@ -125,7 +125,6 @@ SJ<-fulltext_df$agg_full_text[6]
 
 # now have to make compatible with a VCorpus object
 fullcorp_vcorpus <- Corpus(VectorSource(fulltext_df$agg_full_text))
-
 BDN_vcorpus <- Corpus(VectorSource(BDN)) 
 KJ_vcorpus<- Corpus(VectorSource(KJ)) 
 MT_vcorpus<- Corpus(VectorSource(MT)) 
@@ -140,6 +139,7 @@ SJ_vcorpus<- Corpus(VectorSource(SJ))
 
 ```{r}
 # table ngrams for now - processing is really slow
+# python is faster
 #NLP_tokenizer <- function(x) {
 #  unlist(lapply(ngrams(words(x), 1:2), paste, collapse = "_"), use.names = FALSE)
 #}
@@ -164,6 +164,8 @@ control_list_ngram = list(removePunctuation = FALSE,
 # Document-Term Matrix
 
 ```{r}
+full_DocTermMatrix <- DocumentTermMatrix(fullcorp_vcorpus, control_list_ngram)
+
 KJ_DocTermMatrix <- DocumentTermMatrix(KJ_vcorpus, control_list_ngram)
 
 BDN_DocTermMatrix <- DocumentTermMatrix(BDN_vcorpus, control_list_ngram)
@@ -185,26 +187,25 @@ SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control_list_ngram)
 
 library(tidytext)
 library(dplyr)
-
-BDN_terms<- tidy(BDN_DocTermMatrix)
-BDN_words <- BDN_terms %>%
-  group_by(term) %>%
-  summarise(
-    n = n(),
-    total = sum(count)) %>%
-  mutate(nchar = nchar(term))
-
-
-```
-
-```{r}
-
 library(ggplot2)
 
-ggplot(BDN_words, aes(x = nchar)) +
-  geom_histogram(binwidth = 1)
+hist_words <- function(DTM) {
+  DTM_terms<- tidy(DTM)
+  
+  DTM_words <- DTM_terms %>%
+    group_by(term) %>%
+    summarise(
+      n = n(),
+      total = sum(count)) %>%
+    mutate(nchar = nchar(term))
+  
+  ggplot(DTM_words, aes(x = nchar)) +
+    geom_histogram(binwidth = 1)
+}
 
 ```
+
+
 
 ```{r}
 dtt_trimmed <- words %>%
