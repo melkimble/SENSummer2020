@@ -26,7 +26,7 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 
 ![alt text]("https://github.com/melkimble/SENSummer2020/Images/Slides for training presentation (3).jpg")
 
-![](https://github.com/melkimble/SENSummer2020/Images/oysters.jpeg)
+
 
 Insert Flow Chart Here?
 
@@ -43,4 +43,8 @@ Supervised Classification (will it work?!???!?!? - SpaCy) -?
  * use coded text as labels for classification
 Timeline of SEN occurrences & oyster events
 
-
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/1_PPH_wc.png")
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/2_SJ_wc.png")
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/3_KJ_wc.png")
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/lda_wcs.png")
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/dmatrix_clusterDendogram.png")
