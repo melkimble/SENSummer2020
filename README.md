@@ -16,8 +16,6 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 - Janardan Mainali (Portland State University)
 
 
-#  Broad Project Goals
-(Cyber Goals) - How did they connect?
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides_for_training_presentation_4.jpg">
 
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides_for_training_presentation_1.jpg">
@@ -28,19 +26,24 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 
 ## Portland Press Herald
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/1_PPH_wc.png">
+
 ## Sun Journal
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/2_SJ_wc.png">
+
 ## Kennebec Journal
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/3_KJ_wc.png">
+
 ## Morning Sentinel
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/4_MS_wc.png">
+
 ## Maine Times
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/5_MT_wc.png">
+
 ## Bangor Daily News
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/6_BDN_wc.png">
 
 ## Distance Matrix Cluster Dendrogram
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/dmatrix_clusterDendogram.png">
 
-## LDA WordClouds (5 clusters)
+## LDA WordClouds (5 clusters on full corpus)
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/lda_wcs.png">
