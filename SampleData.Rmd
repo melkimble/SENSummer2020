@@ -78,24 +78,6 @@ pq_metaSub <- pq_metadata %>%
                                       'Kennebec Journal; Augusta, Me .' = 'Kennebec Journal; Augusta, Me.',
                                       'Portland Press Herald; Port land, Me.' = 'Portland Press Herald; Portland, Me.'))
 
-
-#pq_metaSub$`Publication title` <- as.character(pq_metaSub$`Publication title`)
-
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#              "Bangor Daily News; Bang or, Me."] <- "Bangor Daily News; Bangor, Me."
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#              "Bangor Daily News; Ba ngor, Me."] <- "Bangor Daily News; Bangor, Me."
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#              "Bangor Dail y News; Bangor, Me." ] <- "Bangor Daily News; Bangor, Me."
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#              "Morning Sentinel; Wate rville, Me." ] <- "Morning Sentinel; Waterville, Me."
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#              "Central Maine Morning Sentinel; Waterville, Me." ] <- "Morning Sentinel; Waterville, Me."
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#              "Kennebec Journal; Augusta, Me ." ] <- "Kennebec Journal; Augusta, Me."
-#pq_metaSub[pq_metaSub$`Publication title` == 
-#             "Portland Press Herald; Port land, Me."] <- "Portland Press Herald; Portland, Me."
-
 #check to see if pub title substitution worked --- yes, no weird repeats
 unique(pq_metaSub$`Publication title`)
 
