@@ -70,6 +70,7 @@ pq_metaSub[pq_metaSub$`Publication title` ==
 
 #check to see if pub title substitution worked --- yes, no weird repeats
 unique(pq_metaSub$`Publication title`)
+
 ```
 
 
@@ -123,12 +124,15 @@ PPH<-fulltext_df$agg_full_text[5]
 SJ<-fulltext_df$agg_full_text[6]
 
 # now have to make compatible with a VCorpus object
+fullcorp_vcorpus <- Corpus(VectorSource(fulltext_df$agg_full_text))
+
 BDN_vcorpus <- Corpus(VectorSource(BDN)) 
 KJ_vcorpus<- Corpus(VectorSource(KJ)) 
 MT_vcorpus<- Corpus(VectorSource(MT)) 
 MS_vcorpus<- Corpus(VectorSource(MS)) 
 PPH_vcorpus<- Corpus(VectorSource(PPH)) 
 SJ_vcorpus<- Corpus(VectorSource(SJ)) 
+
 
 ```
 
