@@ -302,12 +302,21 @@ for (i in 1:nrow(full_dtm_matrix)) {
 
 
 ### Calculating distance
+Next we calculate the euclidean distance between the documents. This distance is what the Clustering algorithm uses to cluster documents.
+
+First, DTM needs to be converted to a Standard R Matrix that can be consumed by dist
+
 
 ```{r}
 distMatrix <- dist(full_dtm_matrix, method="euclidean")
 
-
 ```
+The R algorithm we’ll use is hclust which does agglomerative hierarchical clustering. Here’s a simplified description of how it works:
+
+Assign each document to its own (single member) cluster
+Find the pair of clusters that are closest to each other (dist) and merge them. So you now have one cluster less than before.
+Compute distances between the new cluster and each of the old clusters.
+Repeat steps 2 and 3 until you have a single cluster containing all documents.
 
 ```{r}
 png_fn = paste0("Images/dmatrix_clusterDendogram.png",collapse=NULL)
