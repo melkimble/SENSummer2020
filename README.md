@@ -18,13 +18,13 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 
 #  Broad Project Goals
 (Cyber Goals) - How did they connect?
-![](https://github.com/melkimble/SENSummer2020/Images/)
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/Slides for training presentation (4).jpg")
 
-![](https://github.com/melkimble/SENSummer2020/Images/)
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/Slides for training presentation (1).jpg")
 
-![](https://github.com/melkimble/SENSummer2020/Images/)
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/Slides for training presentation (2).jpg")
 
-![](https://github.com/melkimble/SENSummer2020/Images/oysters.jpeg)
+![alt text]("https://github.com/melkimble/SENSummer2020/Images/Slides for training presentation (3).jpg")
 
 ![](https://github.com/melkimble/SENSummer2020/Images/oysters.jpeg)
 
