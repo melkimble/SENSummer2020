@@ -90,9 +90,9 @@ unique(pq_metaSub$`Publication title`)
 
 ```{r}
 
-fulltext_df<-pq_metaSub %>%
-  group_by(`Publication title`) %>%
-  summarise(agg_full_text = toString(`Full text`), .groups = 'keep')
+#fulltext_df<-pq_metaSub %>%
+#  group_by(`Publication title`) %>%
+#  summarise(agg_full_text = toString(`Full text`), .groups = 'keep')
 ```
 
 ```{r}
@@ -108,34 +108,98 @@ fulltext_df<-pq_metaSub %>%
 
 #create full text object for each publication
 
-#fullcorp_agg<-fulltext_df %>%
-#  ungroup() %>%
-#  summarise(agg_full_text = toString(agg_full_text))
+fullcorp_agg<-fulltext_df %>%
+  ungroup() %>%
+  summarise(agg_full_text = toString(agg_full_text))
 
-#BDN<-fulltext_df$agg_full_text[1]
+BDN<-fulltext_df %>%
+  select(c(`Publication title`,`Full text`)) %>%
+  filter(`Publication title` == "Bangor Daily News; Bangor, Me.")
 
-#KJ<-fulltext_df$agg_full_text[2]
+KJ<-fulltext_df %>% 
+   select(c(`Publication title`,`Full text`)) %>%
+  filter(`Publication title` == "Kennebec Journal; Augusta, Me.")
 
-#MT<-fulltext_df$agg_full_text[3]
+MT<-fulltext_df %>% 
+   select(c(`Publication title`,`Full text`)) %>%
+  filter(`Publication title` == "Maine Times; Portland, Me.")
 
-#MS<-fulltext_df$agg_full_text[4]
+MS<-fulltext_df %>% 
+   select(c(`Publication title`,`Full text`)) %>%
+  filter(`Publication title` == "Morning Sentinel; Waterville, Me.")
 
-#PPH<-fulltext_df$agg_full_text[5]
+PPH<-fulltext_df %>% 
+   select(c(`Publication title`,`Full text`)) %>%
+  filter(`Publication title` == "Portland Press Herald; Portland, Me.")
 
-#SJ<-fulltext_df$agg_full_text[6]
+SJ<-fulltext_df %>% 
+   select(c(`Publication title`,`Full text`)) %>%
+  filter(`Publication title` == "Sun Journal; Lewiston, Me.")
 
 # now have to make compatible with a VCorpus object
 fullcorp_vcorpus <- Corpus(VectorSource(fulltext_df$agg_full_text))
 
-#BDN_vcorpus <- Corpus(VectorSource(BDN)) 
-#KJ_vcorpus<- Corpus(VectorSource(KJ)) 
-#MT_vcorpus<- Corpus(VectorSource(MT)) 
-#MS_vcorpus<- Corpus(VectorSource(MS)) 
-#PPH_vcorpus<- Corpus(VectorSource(PPH)) 
-#SJ_vcorpus<- Corpus(VectorSource(SJ)) 
+BDN_vcorpus <- Corpus(VectorSource(BDN$`Full text`)) 
+KJ_vcorpus<- Corpus(VectorSource(KJ$`Full text`)) 
+MT_vcorpus<- Corpus(VectorSource(MT$`Full text`)) 
+MS_vcorpus<- Corpus(VectorSource(MS$`Full text`)) 
+PPH_vcorpus<- Corpus(VectorSource(PPH$`Full text`)) 
+SJ_vcorpus<- Corpus(VectorSource(SJ$`Full text`)) 
 
 
 ```
+
+
+
+
+
+## From here downward the code needs to be changed from the examples to use our own corpus
+
+```{r}
+
+tidy_words <- function(DTM, tidyTrim=FALSE) {
+  ret_list <- list()
+  
+  # The tidytext package converts the (wide) Document Term Matrix into a longer form table with a row for every document and term combination.
+  DTM_terms<- tidy(DTM)
+  ret_list[['DTM_terms']]<-DTM_terms
+  
+  
+  # The words data frame is more amenable to further inspection and cleaning, such as removing outliers.
+  # frequency of word letter lengths -- if there are a lot of long words or short words, probably need to be dropped.
+  DTM_summarise <- DTM_terms %>%
+    group_by(term) %>%
+    summarise(
+      n = n(),
+      total = sum(count)) %>%
+    mutate(nchar = nchar(term))
+  
+  ret_list[['DTM_summarise']]<-DTM_summarise
+
+  
+  
+  if (tidyTrim) {
+    # Words with too many characters are probably not actually words, and extremely uncommon words won’t help when searching for patterns.
+    tidy_trim <- DTM_summarise %>%
+      filter(
+        nchar < 16,
+        n > 1,
+        total > 3) %>%
+      select(term) %>%
+      inner_join(DTM_terms)
+    
+    # Further steps in analyzing this “bag-of-words” require returning to the Document-Term-Matrix structure.
+    DTM_trim <- tidy_trim %>%
+      cast_dtm(document, term, count)
+    
+    ret_list[['DTM_trim']]<-DTM_trim
+  }
+  
+  return(ret_list)
+}
+
+```
+
 
 
 
@@ -179,17 +243,17 @@ control_list_ngram = list(removePunctuation = T,
 ```{r}
 full_DocTermMatrix <- DocumentTermMatrix(fullcorp_vcorpus, control = control_list_ngram)
 
-#KJ_DocTermMatrix <- DocumentTermMatrix(KJ_vcorpus, control = control_list_ngram)
+KJ_DocTermMatrix <- DocumentTermMatrix(KJ_vcorpus, control = control_list_ngram)
 
-#BDN_DocTermMatrix <- DocumentTermMatrix(BDN_vcorpus, control = control_list_ngram)
+BDN_DocTermMatrix <- DocumentTermMatrix(BDN_vcorpus, control = control_list_ngram)
 
-#MT_DocTermMatrix <- DocumentTermMatrix(MT_vcorpus, control = control_list_ngram)
+MT_DocTermMatrix <- DocumentTermMatrix(MT_vcorpus, control = control_list_ngram)
 
-#MS_DocTermMatrix <- DocumentTermMatrix(MS_vcorpus, control = control_list_ngram)
+MS_DocTermMatrix <- DocumentTermMatrix(MS_vcorpus, control = control_list_ngram)
 
-#PPH_DocTermMatrix <- DocumentTermMatrix(PPH_vcorpus, control = control_list_ngram)
+PPH_DocTermMatrix <- DocumentTermMatrix(PPH_vcorpus, control = control_list_ngram)
 
-#SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control = control_list_ngram)
+SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control = control_list_ngram)
 
 #write.csv((as.matrix(full_DocTermMatrix)), "/Data/02_Working/full_DocTermMatrix.csv")
 #DTM_matrix = as.matrix(full_DocTermMatrix)
@@ -200,64 +264,13 @@ inspect(full_DocTermMatrix)
 ```{r}
 
 # make a list of the documents to iterate through
-#DTM_list<-list(full_DocTermMatrix, KJ_DocTermMatrix, BDN_DocTermMatrix,
-#            MT_DocTermMatrix, MS_DocTermMatrix, PPH_DocTermMatrix,
-#            SJ_DocTermMatrix)
+DTM_list<-list(full_DocTermMatrix, KJ_DocTermMatrix, BDN_DocTermMatrix,
+            MT_DocTermMatrix, MS_DocTermMatrix, PPH_DocTermMatrix,
+            SJ_DocTermMatrix)
 
-#DTM_names <- c('full_DocTermMatrix', 'KJ_DocTermMatrix', 'BDN_DocTermMatrix',
-#            'MT_DocTermMatrix', 'MS_DocTermMatrix', 'PPH_DocTermMatrix',
-#            'SJ_DocTermMatrix')
-```
-
-
-## From here downward the code needs to be changed from the examples to use our own corpus
-
-```{r}
-
-hist_words <- function(DTM, plotTitle='', tidyTrim=FALSE) {
-  ret_list <- list()
-  # The tidytext package converts the (wide) Document Term Matrix into a longer form table with a row for every document and term combination.
-  DTM_terms<- tidy(DTM)
-  ret_list[['DTM_terms']]<-DTM_terms
-  
-  
-  # The words data frame is more amenable to further inspection and cleaning, such as removing outliers.
-  # frequency of word letter lengths -- if there are a lot of long words or short words, probably need to be dropped.
-  DTM_words <- DTM_terms %>%
-    group_by(term) %>%
-    summarise(
-      n = n(),
-      total = sum(count)) %>%
-    mutate(nchar = nchar(term))
-  
-  
-  if (tidyTrim) {
-    # Words with too many characters are probably not actually words, and extremely uncommon words won’t help when searching for patterns.
-    dtt_trimmed <- DTM_words %>%
-      filter(
-        nchar < 16,
-        n > 1,
-        total > 3) %>%
-      select(term) %>%
-      inner_join(DTM_terms)
-    
-    print(paste("tidytrimming:",plotTitle))
-    # Further steps in analyzing this “bag-of-words” require returning to the Document-Term-Matrix structure.
-    DTM_trimmed <- dtt_trimmed %>%
-      cast_dtm(document, term, count)
-    
-    ret_list[['DTM_trimmed']]<-DTM_trimmed
-  }
-  
-  plt<-ggplot(DTM_words, aes(x = nchar)) +
-    ggtitle(plotTitle) +
-    theme(plot.title = element_text(hjust = 0.5)) +
-    geom_histogram(binwidth = 1)
-  ret_list[['plt']]<-plt
-  
-  return(ret_list)
-}
-
+DTM_names <- c('full_DocTermMatrix', 'KJ_DocTermMatrix', 'BDN_DocTermMatrix',
+            'MT_DocTermMatrix', 'MS_DocTermMatrix', 'PPH_DocTermMatrix',
+            'SJ_DocTermMatrix')
 ```
 
 ```{r}
@@ -265,33 +278,52 @@ library(gtable)
 library(grid)
 library(gridExtra)
 
-#gtab_plt_list<-list()
-#DTM_terms_list<-list()
-#DTM_trimmed_list<-list()
+gtab_plt_list<-list()
+DTM_terms_list<-list()
+DTM_summarise_list<-list()
+DTM_trimmed_list<-list()
 
-full_DTM<-hist_words(full_DocTermMatrix, "Publications")
-full_DTM[['plt']]
+#full_DTM<-tidy_words(full_DocTermMatrix, tidyTrim=TRUE)
+
+#plotTitle = "Full Corpus"
+
+#png_fn = paste0("Images/WordLengthFreq_Hist.png",collapse=NULL)
+
+# save the image in png format
+#png(png_fn, width=12, height=8, units="in", res=300)
+
+#dev.off()
 
 # iterate through hist_words function
-#for (i in 1:length(DTM_list)) {
+for (i in 1:length(DTM_list)) {
   
-#  gplt<-hist_words(DTM_list[[i]], DTM_names[i],tidyTrim=TRUE)
-#  print(DTM_names[i])
+  tidy_DTM<-tidy_words(DTM_list[[i]],tidyTrim=TRUE)
+  print(DTM_names[i])
+  
+  gplt <- ggplot(tidy_DTM[['DTM_summarise']], aes(x = nchar)) +
+    ggtitle(DTM_names[i]) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    geom_histogram(binwidth = 1)
 
-#  DTM_terms_list[[i]]<-gplt[[1]]
-#  DTM_trimmed_list[[i]]<-gplt[[2]]  
-#  gtab_plt_list[[i]]<-gplt[[3]]
+  DTM_terms_list[[i]]<-tidy_DTM[['DTM_terms']]
+  DTM_trimmed_list[[i]]<-tidy_DTM[['DTM_trim']]  
+  DTM_summarise_list[[i]]<-tidy_DTM[['DTM_summarise']] 
+  gtab_plt_list[[i]]<-gplt
 
-#}
+}
 
-#grid.arrange(grobs = gtab_plt_list, ncol=3)
+grid.arrange(grobs = gtab_plt_list, ncol=3)
 
 ```
 ## Term Correlations
 
 
 ```{r}
-word_assoc <- findAssocs(full_DTM[['DTM_terms']], 'ken', 0.6)
+# [1] "Portland Press Herald; Portland, Me."  [2] "Sun Journal; Lewiston, Me."           
+# [3] "Kennebec Journal; Augusta, Me."        [4] "Morning Sentinel; Waterville, Me."    
+# [5] "Maine Times; Portland, Me."            [6] "Bangor Daily News; Bangor, Me."  
+
+word_assoc <- findAssocs(DTM_terms_list[[6]], 'ken', 0.6)
 word_assoc <- data.frame(
   word = names(word_assoc[[1]]),
   assoc = word_assoc,
@@ -329,14 +361,17 @@ terms(fit, 20)
 
 
 ```{r}
-email_topics <- as.data.frame(
-  posterior(fit, dtm_trimmed)$topics)
+# [1] "Portland Press Herald; Portland, Me."  [2] "Sun Journal; Lewiston, Me."           
+# [3] "Kennebec Journal; Augusta, Me."        [4] "Morning Sentinel; Waterville, Me."    
+# [5] "Maine Times; Portland, Me."            [6] "Bangor Daily News; Bangor, Me."  
+pub_topics <- as.data.frame(
+  posterior(fit, DTM_trimmed_list[[6]])$topics)
 
 ```
 
 ```{r}
 # console
-head(email_topics)
+head(pub_topics)
 
 ```
 

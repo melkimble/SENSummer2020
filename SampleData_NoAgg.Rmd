@@ -282,9 +282,9 @@ full_dtm_matrix = as.matrix(full_DocTermMatrix)
 
 
 ```{r}
-# [1] "Portland Press Herald; Portland, Me." [2] "Sun Journal; Lewiston, Me."           
-# [3] "Kennebec Journal; Augusta, Me."      [4] "Morning Sentinel; Waterville, Me."    
-# "Maine Times; Portland, Me."           "Bangor Daily News; Bangor, Me."  
+# [1] "Portland Press Herald; Portland, Me."  [2] "Sun Journal; Lewiston, Me."           
+# [3] "Kennebec Journal; Augusta, Me."        [4] "Morning Sentinel; Waterville, Me."    
+# [5] "Maine Times; Portland, Me."            [6] "Bangor Daily News; Bangor, Me."  
 
 pub_list <- c("PPH", "SJ", "KJ", "MS", "MT", "BDN")
 
