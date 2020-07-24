@@ -34,6 +34,22 @@ head(pq_metadata)
 unique(pq_metadata$`Publication title`)
 
 ```
+```{r}
+
+# How do you want to treat NA?
+# subset the data by the NAs, explore them & their origin
+# can we programmatically fix it, or do we have to do it manually?
+
+sum(is.na(pq_metadata$`Publication title`)) ### there are 45 rows that have NAs
+
+pqNA<-pq_metadata[is.na(pq_metadata$`Publication title`),]
+##lots of info missing from other fields in this group... remove? 
+
+sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those without titles
+
+
+```
+
 
 ```{r}
 # Substitute 
@@ -49,24 +65,36 @@ unique(pq_metadata$`Publication title`)
 # "Kennebec Journal; Augusta, Me." 
 # "Kennebec Journal; Augusta, Me ."
 
-pq_metaSub<-pq_metadata #create new data frame to avoid saving over
 
-pq_metaSub$`Publication title` <- as.character(pq_metaSub$`Publication title`)
+#pq_metaSub<-pq_metadata #create new data frame to avoid saving over
 
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Bangor Daily News; Bang or, Me."] <- "Bangor Daily News; Bangor, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Bangor Daily News; Ba ngor, Me."] <- "Bangor Daily News; Bangor, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Bangor Dail y News; Bangor, Me." ] <- "Bangor Daily News; Bangor, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Morning Sentinel; Wate rville, Me." ] <- "Morning Sentinel; Waterville, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Central Maine Morning Sentinel; Waterville, Me." ] <- "Morning Sentinel; Waterville, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Kennebec Journal; Augusta, Me ." ] <- "Kennebec Journal; Augusta, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-             "Portland Press Herald; Port land, Me."] <- "Portland Press Herald; Portland, Me."
+pq_metaSub <- pq_metadata %>% 
+  mutate(`Publication title` = recode(`Publication title`,
+                                      'Bangor Daily News; Bang or, Me.' = 'Bangor Daily News; Bangor, Me.',
+                                      'Bangor Daily News; Ba ngor, Me.' = 'Bangor Daily News; Bangor, Me.',
+                                      'Bangor Dail y News; Bangor, Me.' = 'Bangor Daily News; Bangor, Me.',
+                                      'Morning Sentinel; Wate rville, Me.' = 'Morning Sentinel; Waterville, Me.',
+                                      'Central Maine Morning Sentinel; Waterville, Me.' = 'Morning Sentinel; Waterville, Me.',
+                                      'Kennebec Journal; Augusta, Me .' = 'Kennebec Journal; Augusta, Me.',
+                                      'Portland Press Herald; Port land, Me.' = 'Portland Press Herald; Portland, Me.'))
+
+
+#pq_metaSub$`Publication title` <- as.character(pq_metaSub$`Publication title`)
+
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#              "Bangor Daily News; Bang or, Me."] <- "Bangor Daily News; Bangor, Me."
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#              "Bangor Daily News; Ba ngor, Me."] <- "Bangor Daily News; Bangor, Me."
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#              "Bangor Dail y News; Bangor, Me." ] <- "Bangor Daily News; Bangor, Me."
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#              "Morning Sentinel; Wate rville, Me." ] <- "Morning Sentinel; Waterville, Me."
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#              "Central Maine Morning Sentinel; Waterville, Me." ] <- "Morning Sentinel; Waterville, Me."
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#              "Kennebec Journal; Augusta, Me ." ] <- "Kennebec Journal; Augusta, Me."
+#pq_metaSub[pq_metaSub$`Publication title` == 
+#             "Portland Press Herald; Port land, Me."] <- "Portland Press Herald; Portland, Me."
 
 #check to see if pub title substitution worked --- yes, no weird repeats
 unique(pq_metaSub$`Publication title`)
@@ -74,21 +102,7 @@ unique(pq_metaSub$`Publication title`)
 ```
 
 
-```{r}
 
-# How do you want to treat NA?
-# subset the data by the NAs, explore them & their origin
-# can we programmatically fix it, or do we have to do it manually?
-
-sum(is.na(pq_metaSub$`Publication title`)) ### there are 45 rows that have NAs
-
-pqNA<-pq_metaSub[is.na(pq_metaSub$`Publication title`),]
-##lots of info missing from other fields in this group... remove? 
-
-sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those without titles
-
-
-```
 
 ```{r}
 
@@ -150,6 +164,8 @@ SJ_vcorpus<- Corpus(VectorSource(SJ))
 
 #tokenize = NLP_tokenizer,
 
+# stemming: dropping -ing -s -es
+# lemmatization -- where is this?
 control_list_ngram = list(removePunctuation = FALSE,
                           removeNumbers = FALSE, 
                           stopwords = stopwords("english"), 
@@ -190,8 +206,11 @@ library(dplyr)
 library(ggplot2)
 
 hist_words <- function(DTM) {
+  # The tidytext package converts the (wide) Document Term Matrix into a longer form table with a row for every document and term combination.
   DTM_terms<- tidy(DTM)
   
+  # The words data frame is more amenable to further inspection and cleaning, such as removing outliers.
+  # frequency of word letter lengths
   DTM_words <- DTM_terms %>%
     group_by(term) %>%
     summarise(
@@ -202,6 +221,11 @@ hist_words <- function(DTM) {
   ggplot(DTM_words, aes(x = nchar)) +
     geom_histogram(binwidth = 1)
 }
+
+```
+
+```{r}
+hist_words(BDN_DocTermMatrix)
 
 ```
 
