@@ -250,24 +250,26 @@ inspect(full_DocTermMatrix)
 
 ```{r}
 
-#gtab_plt_list<-list()
-#DTM_terms_list<-list()
-#DTM_trimmed_list<-list()
-
 full_DTM<-tidy_words(full_DocTermMatrix, tidyTrim=TRUE)
+
+
+```
+```{r}
 
 plotTitle = "Full Corpus"
 
+png_fn = paste0("Images/WordLengthFreq_Hist.png",collapse=NULL)
+
+# save the image in png format
+png(png_fn, width=12, height=8, units="in", res=300)
 ggplot(full_DTM[['DTM_summarise']], aes(x = nchar)) +
   ggtitle(plotTitle) +
   theme(plot.title = element_text(hjust = 0.5)) +
   geom_histogram(binwidth = 1)
-
-
+dev.off()
 
 
 ```
-
 
 # to save DTM as hard-copy csv
 ```{r}
