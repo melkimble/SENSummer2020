@@ -43,8 +43,8 @@ Supervised Classification (will it work?!???!?!? - SpaCy) -?
  * use coded text as labels for classification
 Timeline of SEN occurrences & oyster events
 
-![alt text]("Images/1_PPH_wc.png")
-![alt text]("Images/2_SJ_wc.png")
-![alt text]("Images/3_KJ_wc.png")
-![alt text]("Images/lda_wcs.png")
-![alt text]("Images/dmatrix_clusterDendogram.png")
+![]("Images/1_PPH_wc.png")
+![]("Images/2_SJ_wc.png")
+![]("Images/3_KJ_wc.png")
+![]("Images/lda_wcs.png")
+![]("Images/dmatrix_clusterDendogram.png")
