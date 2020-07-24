@@ -14,6 +14,7 @@ library(NLP)
 library(tidytext)
 library(tm)
 library(topicmodels)
+library(ggplot2)
 
 #load data
 pq_metadata <- fread('Data/02_Working/pq_metadata.csv')
@@ -34,6 +35,22 @@ head(pq_metadata)
 unique(pq_metadata$`Publication title`)
 
 ```
+```{r}
+
+# How do you want to treat NA?
+# subset the data by the NAs, explore them & their origin
+# can we programmatically fix it, or do we have to do it manually?
+
+sum(is.na(pq_metadata$`Publication title`)) ### there are 45 rows that have NAs
+
+pqNA<-pq_metadata[is.na(pq_metadata$`Publication title`),]
+##lots of info missing from other fields in this group... remove? 
+
+sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those without titles
+
+
+```
+
 
 ```{r}
 # Substitute 
@@ -49,52 +66,33 @@ unique(pq_metadata$`Publication title`)
 # "Kennebec Journal; Augusta, Me." 
 # "Kennebec Journal; Augusta, Me ."
 
-pq_metaSub<-pq_metadata #create new data frame to avoid saving over
 
-pq_metaSub$`Publication title` <- as.character(pq_metaSub$`Publication title`)
+#pq_metaSub<-pq_metadata #create new data frame to avoid saving over
 
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Bangor Daily News; Bang or, Me."] <- "Bangor Daily News; Bangor, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Bangor Daily News; Ba ngor, Me."] <- "Bangor Daily News; Bangor, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Bangor Dail y News; Bangor, Me." ] <- "Bangor Daily News; Bangor, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Morning Sentinel; Wate rville, Me." ] <- "Morning Sentinel; Waterville, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Central Maine Morning Sentinel; Waterville, Me." ] <- "Morning Sentinel; Waterville, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-              "Kennebec Journal; Augusta, Me ." ] <- "Kennebec Journal; Augusta, Me."
-pq_metaSub[pq_metaSub$`Publication title` == 
-             "Portland Press Herald; Port land, Me."] <- "Portland Press Herald; Portland, Me."
+pq_metaSub <- pq_metadata %>% 
+  tidyr::drop_na(`Publication title`) %>%
+  mutate(`Publication title` = recode(`Publication title`,
+                                      'Bangor Daily News; Bang or, Me.' = 'Bangor Daily News; Bangor, Me.',
+                                      'Bangor Daily News; Ba ngor, Me.' = 'Bangor Daily News; Bangor, Me.',
+                                      'Bangor Dail y News; Bangor, Me.' = 'Bangor Daily News; Bangor, Me.',
+                                      'Morning Sentinel; Wate rville, Me.' = 'Morning Sentinel; Waterville, Me.',
+                                      'Central Maine Morning Sentinel; Waterville, Me.' = 'Morning Sentinel; Waterville, Me.',
+                                      'Kennebec Journal; Augusta, Me .' = 'Kennebec Journal; Augusta, Me.',
+                                      'Portland Press Herald; Port land, Me.' = 'Portland Press Herald; Portland, Me.'))
 
 #check to see if pub title substitution worked --- yes, no weird repeats
 unique(pq_metaSub$`Publication title`)
-```
-
-
-```{r}
-
-# How do you want to treat NA?
-# subset the data by the NAs, explore them & their origin
-# can we programmatically fix it, or do we have to do it manually?
-
-sum(is.na(pq_metaSub$`Publication title`)) ### there are 45 rows that have NAs
-
-pqNA<-pq_metaSub[is.na(pq_metaSub$`Publication title`),]
-##lots of info missing from other fields in this group... remove? 
-
-sum(is.na(pqNA$`Full text`)) ## there are 35 rows without text among those without titles
-
 
 ```
+
+
+
 
 ```{r}
 
 fulltext_df<-pq_metaSub %>%
   group_by(`Publication title`) %>%
   summarise(agg_full_text = toString(`Full text`), .groups = 'keep')
-
 ```
 
 ```{r}
@@ -110,25 +108,32 @@ fulltext_df<-pq_metaSub %>%
 
 #create full text object for each publication
 
-BDN<-fulltext_df$agg_full_text[1]
+#fullcorp_agg<-fulltext_df %>%
+#  ungroup() %>%
+#  summarise(agg_full_text = toString(agg_full_text))
 
-KJ<-fulltext_df$agg_full_text[2]
+#BDN<-fulltext_df$agg_full_text[1]
 
-MT<-fulltext_df$agg_full_text[3]
+#KJ<-fulltext_df$agg_full_text[2]
 
-MS<-fulltext_df$agg_full_text[4]
+#MT<-fulltext_df$agg_full_text[3]
 
-PPH<-fulltext_df$agg_full_text[5]
+#MS<-fulltext_df$agg_full_text[4]
 
-SJ<-fulltext_df$agg_full_text[6]
+#PPH<-fulltext_df$agg_full_text[5]
+
+#SJ<-fulltext_df$agg_full_text[6]
 
 # now have to make compatible with a VCorpus object
-BDN_vcorpus <- Corpus(VectorSource(BDN)) 
-KJ_vcorpus<- Corpus(VectorSource(KJ)) 
-MT_vcorpus<- Corpus(VectorSource(MT)) 
-MS_vcorpus<- Corpus(VectorSource(MS)) 
-PPH_vcorpus<- Corpus(VectorSource(PPH)) 
-SJ_vcorpus<- Corpus(VectorSource(SJ)) 
+fullcorp_vcorpus <- Corpus(VectorSource(fulltext_df$agg_full_text))
+
+#BDN_vcorpus <- Corpus(VectorSource(BDN)) 
+#KJ_vcorpus<- Corpus(VectorSource(KJ)) 
+#MT_vcorpus<- Corpus(VectorSource(MT)) 
+#MS_vcorpus<- Corpus(VectorSource(MS)) 
+#PPH_vcorpus<- Corpus(VectorSource(PPH)) 
+#SJ_vcorpus<- Corpus(VectorSource(SJ)) 
+
 
 ```
 
@@ -136,23 +141,35 @@ SJ_vcorpus<- Corpus(VectorSource(SJ))
 
 ```{r}
 # table ngrams for now - processing is really slow
+# python is faster
 #NLP_tokenizer <- function(x) {
 #  unlist(lapply(ngrams(words(x), 1:2), paste, collapse = "_"), use.names = FALSE)
 #}
 
+#prints stopwords for english
+stopwords(kind="SMART")
 ```
 
 ```{r}
 
+#ndocs <- nrow(fulltext_df)
+# we don't want to ignore extremely rare words for now, so setting this to infinity
+#minTermFreq <- -Inf
+# ignore overly common words i.e. terms that appear in more than 50% of the documents
+#maxTermFreq <- ndocs * .5
+# bounds = list(global = c(minTermFreq, maxTermFreq))
+#  
 #tokenize = NLP_tokenizer,
 
-control_list_ngram = list(removePunctuation = FALSE,
-                          removeNumbers = FALSE, 
-                          stopwords = stopwords("english"), 
+# stemming: dropping -ing -s -es
+# lemmatization -- where is this?
+# tm list of stopwords: https://rdrr.io/rforge/tm/man/stopwords.html
+control_list_ngram = list(removePunctuation = T,
+                          removeNumbers = T, 
+                          stopwords = TRUE,
                           tolower = T, 
-                          stemming = T, 
-                          weighting = function(x)
-                            weightTf(x)
+                          stemming = T,
+                          wordLengths=c(3, 15)
                           )
 
 ```
@@ -160,18 +177,36 @@ control_list_ngram = list(removePunctuation = FALSE,
 # Document-Term Matrix
 
 ```{r}
-KJ_DocTermMatrix <- DocumentTermMatrix(KJ_vcorpus, control_list_ngram)
+full_DocTermMatrix <- DocumentTermMatrix(fullcorp_vcorpus, control = control_list_ngram)
 
-BDN_DocTermMatrix <- DocumentTermMatrix(BDN_vcorpus, control_list_ngram)
+#KJ_DocTermMatrix <- DocumentTermMatrix(KJ_vcorpus, control = control_list_ngram)
 
-MT_DocTermMatrix <- DocumentTermMatrix(MT_vcorpus, control_list_ngram)
+#BDN_DocTermMatrix <- DocumentTermMatrix(BDN_vcorpus, control = control_list_ngram)
 
-MS_DocTermMatrix <- DocumentTermMatrix(MS_vcorpus, control_list_ngram)
+#MT_DocTermMatrix <- DocumentTermMatrix(MT_vcorpus, control = control_list_ngram)
 
-PPH_DocTermMatrix <- DocumentTermMatrix(PPH_vcorpus, control_list_ngram)
+#MS_DocTermMatrix <- DocumentTermMatrix(MS_vcorpus, control = control_list_ngram)
 
-SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control_list_ngram)
+#PPH_DocTermMatrix <- DocumentTermMatrix(PPH_vcorpus, control = control_list_ngram)
 
+#SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control = control_list_ngram)
+
+#write.csv((as.matrix(full_DocTermMatrix)), "/Data/02_Working/full_DocTermMatrix.csv")
+#DTM_matrix = as.matrix(full_DocTermMatrix)
+
+inspect(full_DocTermMatrix)
+```
+
+```{r}
+
+# make a list of the documents to iterate through
+#DTM_list<-list(full_DocTermMatrix, KJ_DocTermMatrix, BDN_DocTermMatrix,
+#            MT_DocTermMatrix, MS_DocTermMatrix, PPH_DocTermMatrix,
+#            SJ_DocTermMatrix)
+
+#DTM_names <- c('full_DocTermMatrix', 'KJ_DocTermMatrix', 'BDN_DocTermMatrix',
+#            'MT_DocTermMatrix', 'MS_DocTermMatrix', 'PPH_DocTermMatrix',
+#            'SJ_DocTermMatrix')
 ```
 
 
@@ -179,57 +214,84 @@ SJ_DocTermMatrix <- DocumentTermMatrix(SJ_vcorpus, control_list_ngram)
 
 ```{r}
 
-library(tidytext)
-library(dplyr)
-
-BDN_terms<- tidy(BDN_DocTermMatrix)
-BDN_words <- BDN_terms %>%
-  group_by(term) %>%
-  summarise(
-    n = n(),
-    total = sum(count)) %>%
-  mutate(nchar = nchar(term))
-
+hist_words <- function(DTM, plotTitle='', tidyTrim=FALSE) {
+  ret_list <- list()
+  # The tidytext package converts the (wide) Document Term Matrix into a longer form table with a row for every document and term combination.
+  DTM_terms<- tidy(DTM)
+  ret_list[['DTM_terms']]<-DTM_terms
+  
+  
+  # The words data frame is more amenable to further inspection and cleaning, such as removing outliers.
+  # frequency of word letter lengths -- if there are a lot of long words or short words, probably need to be dropped.
+  DTM_words <- DTM_terms %>%
+    group_by(term) %>%
+    summarise(
+      n = n(),
+      total = sum(count)) %>%
+    mutate(nchar = nchar(term))
+  
+  
+  if (tidyTrim) {
+    # Words with too many characters are probably not actually words, and extremely uncommon words won’t help when searching for patterns.
+    dtt_trimmed <- DTM_words %>%
+      filter(
+        nchar < 16,
+        n > 1,
+        total > 3) %>%
+      select(term) %>%
+      inner_join(DTM_terms)
+    
+    print(paste("tidytrimming:",plotTitle))
+    # Further steps in analyzing this “bag-of-words” require returning to the Document-Term-Matrix structure.
+    DTM_trimmed <- dtt_trimmed %>%
+      cast_dtm(document, term, count)
+    
+    ret_list[['DTM_trimmed']]<-DTM_trimmed
+  }
+  
+  plt<-ggplot(DTM_words, aes(x = nchar)) +
+    ggtitle(plotTitle) +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    geom_histogram(binwidth = 1)
+  ret_list[['plt']]<-plt
+  
+  return(ret_list)
+}
 
 ```
 
 ```{r}
+library(gtable)
+library(grid)
+library(gridExtra)
 
-library(ggplot2)
+#gtab_plt_list<-list()
+#DTM_terms_list<-list()
+#DTM_trimmed_list<-list()
 
-ggplot(BDN_words, aes(x = nchar)) +
-  geom_histogram(binwidth = 1)
+full_DTM<-hist_words(full_DocTermMatrix, "Publications")
+full_DTM[['plt']]
 
-```
+# iterate through hist_words function
+#for (i in 1:length(DTM_list)) {
+  
+#  gplt<-hist_words(DTM_list[[i]], DTM_names[i],tidyTrim=TRUE)
+#  print(DTM_names[i])
 
-```{r}
-dtt_trimmed <- words %>%
-  filter(
-    nchar < 16,
-    n > 1,
-    total > 3) %>%
-  select(term) %>%
-  inner_join(dtt)
+#  DTM_terms_list[[i]]<-gplt[[1]]
+#  DTM_trimmed_list[[i]]<-gplt[[2]]  
+#  gtab_plt_list[[i]]<-gplt[[3]]
 
-```
+#}
 
-```{r}
-dtm_trimmed <- dtt_trimmed %>%
-  cast_dtm(document, term, count)
-
-```
-
-```{r}
-# console
-dtm_trimmed
+#grid.arrange(grobs = gtab_plt_list, ncol=3)
 
 ```
-
 ## Term Correlations
 
 
 ```{r}
-word_assoc <- findAssocs(dtm_trimmed, 'ken', 0.6)
+word_assoc <- findAssocs(full_DTM[['DTM_terms']], 'ken', 0.6)
 word_assoc <- data.frame(
   word = names(word_assoc[[1]]),
   assoc = word_assoc,
