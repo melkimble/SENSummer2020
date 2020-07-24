@@ -329,7 +329,7 @@ dev.off()
 library(topicmodels)
 
 seed = 12345
-fit = LDA(BDN_DocTermMatrix, k = 5, control = list(seed=seed))
+fit = LDA(full_DocTermMatrix, k = 5, control = list(seed=seed))
 ```
 
 
@@ -340,14 +340,14 @@ terms(fit, 20)
 
 
 ```{r}
-email_topics <- as.data.frame(
-  posterior(fit, dtm_trimmed)$topics)
+pub_topics <- as.data.frame(
+  posterior(fit, full_DTM[['DTM_trim']])$topics)
 
 ```
 
 ```{r}
 # console
-head(email_topics)
+head(pub_topics)
 
 ```
 
@@ -355,11 +355,17 @@ head(email_topics)
 ```{r}
 library(ggwordcloud)
 
-topics <- tidy(fit) %>%
+tidy_topics <- tidy(fit) %>%
   filter(beta > 0.004)
 
-ggplot(topics,
+png_fn = paste0("Images/lda_wcs.png",collapse=NULL)
+
+# save the image in png format
+png(png_fn, width=12, height=8, units="in", res=300)
+gplt<-ggplot(tidy_topics,
   aes(size = beta, label = term)) +
   geom_text_wordcloud_area(rm_outside = TRUE) +
   facet_wrap(vars(topic))
+print(gplt)
+dev.off()
 ```
