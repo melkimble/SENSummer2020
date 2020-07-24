@@ -26,13 +26,21 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides_for_training_presentation_3.jpg">
 
-Portland Press Herald
+## Portland Press Herald
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/1_PPH_wc.png">
-Sun Journal
+## Sun Journal
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/2_SJ_wc.png">
-Kennebec Journal
+## Kennebec Journal
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/3_KJ_wc.png">
-LDA WordClouds (5 clusters)
-<img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/lda_wcs.png">
-Distance Matrix Cluster Dendrogram
+## Morning Sentinel
+<img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/4_MS_wc.png">
+## Maine Times
+<img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/5_MT_wc.png">
+## Bangor Daily News
+<img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/6_BDN_wc.png">
+
+## Distance Matrix Cluster Dendrogram
 <img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/dmatrix_clusterDendogram.png">
+
+## LDA WordClouds (5 clusters)
+<img width=“964” src="https://github.com/melkimble/SENSummer2020/blob/master/Images/lda_wcs.png">
