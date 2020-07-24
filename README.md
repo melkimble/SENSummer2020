@@ -18,13 +18,13 @@ To address this gap, we propose to a) define and explore the concept of a “soc
 
 #  Broad Project Goals
 (Cyber Goals) - How did they connect?
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (4).jpg")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (4).jpg")
 
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (1).jpg")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (1).jpg")
 
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (2).jpg")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (2).jpg")
 
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (3).jpg")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/Slides for training presentation (3).jpg")
 
 
 
@@ -43,8 +43,8 @@ Supervised Classification (will it work?!???!?!? - SpaCy) -?
  * use coded text as labels for classification
 Timeline of SEN occurrences & oyster events
 
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/1_PPH_wc.png")
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/2_SJ_wc.png")
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/3_KJ_wc.png")
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/lda_wcs.png")
-![alt text]("https://github.com/melkimble/SENSummer2020/blob/master/Images/dmatrix_clusterDendogram.png")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/1_PPH_wc.png")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/2_SJ_wc.png")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/3_KJ_wc.png")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/lda_wcs.png")
+![]("https://github.com/melkimble/SENSummer2020/blob/master/Images/dmatrix_clusterDendogram.png")
