@@ -4,12 +4,20 @@ output: html_notebook
 ---
 
 # To Do:
-1. Explore Maine Times (20 articles)
-1. n-grams
-2. fix stopwords
-3. Deeper dive on distance matrix (dendrogram) -> publication effect
-4. infer number of topics by coherence score
+* Explore Maine Times (20 articles)
+* Finish downloading corpus
+* n-grams (n-grams and stopwords are interchangable)
+* fix stopwords
+* re-run all of the code
+* Deeper dive on distance matrix (dendrogram - explore values of tree) -> publication effect
+* infer number of topics by coherence score
     * https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25
+    
+----
+* predict category (topics) based on LDA model
+* sample corpus articles based on categories (topics)
+* start thematically coding (NVIVO - BIG - WHAT ARE NARRATIVES!?!?!? HOW DO THEY BREAK DOWN!?!?!?)
+* (might not work) deep learning on thematic labels -> predict back to entire corpus -> construct timeline
 
 ```{r}
 #install.packages("webshot")
