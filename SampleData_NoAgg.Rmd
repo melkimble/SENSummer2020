@@ -16,7 +16,7 @@ output: html_notebook
 ----
 * predict category (topics) based on LDA model
 * sample corpus articles based on categories (topics)
-* start thematically coding (NVIVO - BIG - WHAT ARE NARRATIVES!?!?!? HOW DO THEY BREAK DOWN!?!?!?)
+* start NVIVO coding (NVIVO - BIG - WHAT ARE NARRATIVES!?!?!? HOW DO THEY BREAK DOWN!?!?!?)
 * (might not work) deep learning on thematic labels -> predict back to entire corpus -> construct timeline
 
 ```{r}
