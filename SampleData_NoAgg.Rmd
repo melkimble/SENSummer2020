@@ -3,6 +3,14 @@ title: "SampleData_NoAgg"
 output: html_notebook
 ---
 
+# To Do:
+1. Explore Maine Times (20 articles)
+1. n-grams
+2. fix stopwords
+3. Deeper dive on distance matrix (dendrogram) -> publication effect
+4. infer number of topics by coherence score
+    * https://towardsdatascience.com/beginners-guide-to-lda-topic-modelling-with-r-e57a5a8e7a25
+
 ```{r}
 #install.packages("webshot")
 
@@ -197,7 +205,11 @@ tidy_words <- function(DTM, tidyTrim=FALSE) {
 
 ```
 
+## n-grams here
+
 ```{r}
+
+
 
 #ndocs <- nrow(fulltext_df)
 # we don't want to ignore extremely rare words for now, so setting this to infinity
@@ -213,7 +225,7 @@ tidy_words <- function(DTM, tidyTrim=FALSE) {
 # tm list of stopwords: https://rdrr.io/rforge/tm/man/stopwords.html
 control_list_ngram = list(removePunctuation = T,
                           removeNumbers = T, 
-                          stopwords = TRUE,
+                          stopwords = c("said","main",kind="SMART"),
                           tolower = T, 
                           stemming = T,
                           wordLengths=c(3, 15)
@@ -328,6 +340,8 @@ library(topicmodels)
 
 seed = 12345
 fit = LDA(full_DocTermMatrix, k = 5, control = list(seed=seed))
+
+#predicted_dataset<-predict(corpus, fit)
 ```
 
 
